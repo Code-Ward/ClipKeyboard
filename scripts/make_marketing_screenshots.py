@@ -8,7 +8,7 @@
   flat-rotate : 평면 회전(-5°) 폰, 하단 블리드
   dark        : 다크 배경 반전 + 정면 폰
 """
-import subprocess, sys, pathlib
+import subprocess, sys, pathlib, tempfile
 
 # 사용법: 이 파일을 프로젝트 scripts/ 로 복사한 뒤 SRC, W/H, SHOTS 를 수정하고 실행
 # 원본(raw) 캡처 폴더. 언어별로 나뉜다.
@@ -111,7 +111,9 @@ def main(only=None):
             continue
         body_tpl = BODY_PHONE_FIRST if layout == "text-bottom" else BODY_TEXT_FIRST
         body = body_tpl.format(eyebrow=eyebrow, headline=headline, sub=sub, img=(SRC / fname).as_uri())
-        html_path = WORK / (fname.replace(".png", ".html"))
+        # ⚠️ 중간 HTML 은 scripts/ 가 아니라 임시 폴더에 쓴다. 예전에는 여기 남아서
+        #    산출물이 저장소에 같이 올라갔다.
+        html_path = pathlib.Path(tempfile.gettempdir()) / ("clipkb-shot-" + fname.replace(".png", ".html"))
         html_path.write_text(HTML.format(base=BASE_CSS, layout=LAYOUTS[layout], body=body), encoding="utf-8")
         out_png = OUT / fname
         subprocess.run([CHROME, "--headless=new", f"--screenshot={out_png}",
