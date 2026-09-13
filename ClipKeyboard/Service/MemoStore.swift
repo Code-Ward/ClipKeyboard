@@ -589,11 +589,44 @@ class MemoStore: ObservableObject {
         AppGroup.defaults?.synchronize()
     }
 
+    /// 값 **하나**를 맨 앞에 올린다. 최근에 쓴 것이 앞에 오는 목록이라 이게 맞다.
+    ///
+    /// ⚠️ 여러 개를 넣을 때 이걸 **되풀이해서 부르지 말 것.** 하나씩 맨 앞에 꽂으므로
+    ///    넣은 순서가 통째로 뒤집힌다(`["A","B","C"]` → `["C","B","A"]`).
+    ///    목록을 통째로 넣을 때는 아래 `mergePlaceholderValues(_:for:...)` 를 쓴다.
     func addPlaceholderValue(_ value: String, for placeholder: String, sourceMemoId: UUID, sourceMemoTitle: String) {
         var values = loadPlaceholderValues(for: placeholder)
         values.removeAll { $0.value == value }
         values.insert(PlaceholderValue(value: value, sourceMemoId: sourceMemoId, sourceMemoTitle: sourceMemoTitle), at: 0)
         savePlaceholderValues(values, for: placeholder)
+    }
+
+    /// 단축어가 들고 있는 빈칸 값 목록을 **적어 둔 순서 그대로** 공용 저장소에 합친다.
+    ///
+    /// 왜 따로 있나: 예전에는 저장할 때 `addPlaceholderValue` 를 값마다 되풀이해 불렀다.
+    /// 그 함수는 하나씩 **맨 앞에** 꽂으므로, 편집 화면에서 위에서 아래로 적어 둔 값이
+    /// 저장할 때마다 아래에서 위로 뒤집혔다. 다시 열면 뒤집힌 채로 보이고, 고쳐 저장하면
+    /// 또 뒤집힌다(사용자 신고: "편집할 때마다 관리 빈칸 섹션이 자주 뒤집혀 있습니다").
+    ///
+    /// ⚠️ 순서는 화면에 보이는 것만의 문제가 아니다. 키보드는 목록의 **첫 값**을 기본값으로
+    ///    집어 넣는다. 뒤집히면 맨 처음 적어 둔 값 대신 맨 나중 값이 들어간다
+    ///    (같은 신고의 "{} 부분이 잘못되고" 가 이것이다).
+    func mergePlaceholderValues(_ values: [String],
+                                for placeholder: String,
+                                sourceMemoId: UUID,
+                                sourceMemoTitle: String) {
+        let incoming = values
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+        guard !incoming.isEmpty else { return }
+
+        // 이 단축어가 말하는 값들은 앞으로, 다른 데서 온 값들은 그 뒤로.
+        var rest = loadPlaceholderValues(for: placeholder)
+        rest.removeAll { incoming.contains($0.value) }
+        let fresh = incoming.map {
+            PlaceholderValue(value: $0, sourceMemoId: sourceMemoId, sourceMemoTitle: sourceMemoTitle)
+        }
+        savePlaceholderValues(fresh + rest, for: placeholder)
     }
 
     /// 값 하나를 지운다.

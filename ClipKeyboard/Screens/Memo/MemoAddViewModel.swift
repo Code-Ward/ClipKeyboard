@@ -711,16 +711,18 @@ final class MemoAddViewModel: ObservableObject {
         }
     }
 
+    /// ⚠️ 값마다 `addPlaceholderValue` 를 되풀이해 부르지 않는다. 그 함수는 하나씩
+    ///    **맨 앞에** 꽂으므로 적어 둔 순서가 통째로 뒤집힌다. 목록은 통째로 넘긴다.
+    ///    (`MemoStore.mergePlaceholderValues` 머리말 참고)
     private func savePlaceholderValues(memoId: UUID, memoTitle: String) {
-        for (placeholder, values) in placeholderValues where !values.isEmpty {
-            for val in values {
-                MemoStore.shared.addPlaceholderValue(
-                    val,
-                    for: placeholder,
-                    sourceMemoId: memoId,
-                    sourceMemoTitle: memoTitle
-                )
-            }
+        for placeholder in detectedPlaceholders {
+            guard let values = placeholderValues[placeholder], !values.isEmpty else { continue }
+            MemoStore.shared.mergePlaceholderValues(
+                values,
+                for: placeholder,
+                sourceMemoId: memoId,
+                sourceMemoTitle: memoTitle
+            )
         }
     }
 

@@ -1013,13 +1013,13 @@ struct ClipKeyboardApp: App {
                 // 시스템이 채우는 자리에는 값을 심지 않는다 - 심어 봐야 쓰이지 않고,
                 // 빈칸 관리 화면에 "고를 수 없는 값"으로 남는다.
                 guard !TemplateVariableProcessor.autoVariableTokens.contains(token) else { continue }
-                // 뒤에서부터 넣는다 - addPlaceholderValue 가 맨 앞에 꽂으므로 순서가 뒤집힌다.
-                for value in values.reversed() {
-                    MemoStore.shared.addPlaceholderValue(value,
-                                                         for: token,
-                                                         sourceMemoId: memo.id,
-                                                         sourceMemoTitle: memo.title)
-                }
+                // 목록은 통째로 넘긴다. 예전에는 `addPlaceholderValue` 를 되풀이해 부르며
+                // 뒤집힘을 `reversed()` 로 상쇄했는데, 그 요령을 아는 자리와 모르는 자리가
+                // 갈려서 저장 경로 한 곳이 실제로 뒤집힌 채 나갔다.
+                MemoStore.shared.mergePlaceholderValues(values,
+                                                        for: token,
+                                                        sourceMemoId: memo.id,
+                                                        sourceMemoTitle: memo.title)
             }
         }
     }
