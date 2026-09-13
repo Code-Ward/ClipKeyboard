@@ -75,7 +75,8 @@ LAYOUTS = {
 """,
     # 4) 평면 회전, 좌측 치우침 + 하단 블리드
     "flat-rotate": """
-.headline { text-align:center; margin-top:270px; padding:0 70px; }
+.eyebrow { text-align:center; margin-top:210px; }
+.headline { text-align:center; margin-top:34px; padding:0 70px; }
 .sub { text-align:center; margin-top:52px; }
 .wrap { position:absolute; left:120px; top:1010px; }
 .phone { width:1010px; transform:rotate(-6deg); }
@@ -83,7 +84,8 @@ LAYOUTS = {
     # 5) 다크 배경 반전 + 정면
     "dark": """
 body { background:#131316; }
-.headline { color:#f5f5f7; text-align:center; margin-top:290px; padding:0 70px; }
+.eyebrow { text-align:center; margin-top:230px; }
+.headline { color:#f5f5f7; text-align:center; margin-top:34px; padding:0 70px; }
 .sub { color:#77777d; text-align:center; margin-top:52px; }
 .wrap { display:flex; justify-content:center; margin-top:150px; }
 .phone { width:930px; border-color:#48484e;

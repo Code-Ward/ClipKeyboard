@@ -85,7 +85,7 @@ struct StackPreviewSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 10) {
                     ForEach(Array(steps.enumerated()), id: \.offset) { idx, step in
-                        stepRow(index: idx, step: step)
+                        stepRow(index: idx, step: step, name: memo.displayKey(at: idx))
                     }
                 }
                 .padding(.horizontal, 20)
@@ -112,7 +112,10 @@ struct StackPreviewSheet: View {
 
     /// 단계 하나 - 번호 뱃지 + 값 + 복사 버튼.
     /// 앱에서는 순차 입력 대신 값 하나씩 복사해 쓰므로 각 단계에 복사 버튼을 단다.
-    private func stepRow(index idx: Int, step: String) -> some View {
+    /// - Parameter name: 이 칸의 이름. 지은 적 없으면 자리로 불린다(1단계).
+    ///   **번호만 세우면 무엇을 고르는지 값을 읽어야 알 수 있다.** 값이 길거나 서로
+    ///   비슷하면 그게 잘 안 된다. 스택에 이름을 준 이유가 바로 이 자리다.
+    private func stepRow(index idx: Int, step: String, name: String) -> some View {
         // 행 전체가 탭 대상 - 값 하나를 골라 복사한다.
         Button {
             copyStep(step, at: idx)
@@ -123,11 +126,17 @@ struct StackPreviewSheet: View {
                     .foregroundColor(theme.accentFg)
                     .frame(width: 22, height: 22)
                     .background(Circle().fill(theme.accent))
-                Text(step.isEmpty ? "-" : step)
-                    .font(.body)
-                    .foregroundColor(theme.text)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .fixedSize(horizontal: false, vertical: true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(name)
+                        .font(.caption)
+                        .foregroundColor(theme.textMuted)
+                        .lineLimit(1)
+                    Text(step.isEmpty ? "-" : step)
+                        .font(.body)
+                        .foregroundColor(theme.text)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 Image(systemName: copiedStepIndex == idx ? AppSymbol.checkmarkCircleFill : AppSymbol.docOnDoc)
                     .font(.body)
                     .foregroundColor(copiedStepIndex == idx ? Color.checkGreen : theme.textMuted)
@@ -141,8 +150,8 @@ struct StackPreviewSheet: View {
         .disabled(step.isEmpty)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(String(
-            format: NSLocalizedString("%d단계: %@", comment: "Combo preview step: order and value"),
-            idx + 1, step.isEmpty ? "-" : step))
+            format: NSLocalizedString("%1$@: %2$@", comment: "Stack preview step: slot name and value"),
+            name, step.isEmpty ? "-" : step))
         .accessibilityHint(NSLocalizedString("탭하면 이 값을 복사합니다", comment: "Combo step copy hint"))
     }
 
