@@ -746,7 +746,12 @@ struct UsageStatsView: View {
         case "uses":               return NSLocalizedString("누적 사용 횟수", comment: "Usage metric: total uses")
         case "timeSavedMin":       return NSLocalizedString("절약한 시간 (분)", comment: "Usage metric: time saved minutes")
         case "keyboardUses":       return NSLocalizedString("키보드 사용 횟수", comment: "Usage metric: keyboard uses")
-        case "flag.isPro":         return NSLocalizedString("Pro 사용자", comment: "Usage metric: pro users")
+        case "flag.isPaid":        return NSLocalizedString("결제한 사용자", comment: "Usage metric: paid users")
+        case "flag.isTrial":       return NSLocalizedString("체험 중", comment: "Usage metric: trial users")
+        case "flag.isComped":      return NSLocalizedString("무상 제공", comment: "Usage metric: comped users")
+        // 이 값은 결제가 아니라 접근 권한이다(결제 ∪ 그랜드파더 ∪ 체험 ∪ TestFlight).
+        // 이름에 "Pro"만 적어 두면 결제로 읽히므로 라벨에서 못을 박는다.
+        case "flag.isPro":         return NSLocalizedString("기능 열림 (결제 아님)", comment: "Usage metric: access granted")
         case "flag.keyboardActive": return NSLocalizedString("키보드를 쓰는 사용자", comment: "Usage metric: keyboard active users")
         case "flag.syncOn":        return NSLocalizedString("동기화 켠 사용자", comment: "Usage metric: sync enabled users")
         default:

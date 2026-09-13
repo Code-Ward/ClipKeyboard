@@ -357,6 +357,18 @@ enum UsageInsights {
         func ratio(_ predicate: ([String: Double]) -> Bool) -> String {
             String(format: "%.0f%%", Double(snapshots.filter(predicate).count) / n * 100)
         }
+        /// `key`를 **실제로 보낸 스냅샷만** 분모로 잡는 비율.
+        ///
+        /// 권한 플래그가 셋으로 갈린 뒤에 생긴 도구다. 새 키는 앱을 다시 연
+        /// 기기부터 실려 오므로, 안 보낸 기기까지 분모에 넣으면 "결제 안 함"과
+        /// "아직 모름"이 섞여 전환율이 실제보다 낮게 보인다. 아무도 안 보냈으면
+        /// 0%가 아니라 nil. 모르는 것을 0으로 적지 않는다.
+        func ratioAmongReporting(_ key: String) -> String? {
+            let known = snapshots.filter { $0[key] != nil }
+            guard !known.isEmpty else { return nil }
+            let hit = known.filter { ($0[key] ?? 0) > 0 }.count
+            return String(format: "%.0f%%", Double(hit) / Double(known.count) * 100)
+        }
         func average(_ key: String) -> String {
             String(format: "%.1f", snapshots.reduce(0.0) { $0 + ($1[key] ?? 0) } / n)
         }
@@ -365,10 +377,24 @@ enum UsageInsights {
         let totalUnused = snapshots.reduce(0.0) { $0 + ($1["unusedShortcuts"] ?? 0) }
         let unusedRate = totalShortcuts > 0 ? totalUnused / totalShortcuts * 100 : 0
 
-        return [
-            MarketingSignal(name: NSLocalizedString("Pro 전환율", comment: "Marketing: pro conversion"),
-                            value: ratio { ($0["flag.isPro"] ?? 0) > 0 },
-                            hint: NSLocalizedString("결제까지 간 비율이에요.", comment: "Marketing hint: pro")),
+        // 결제와 접근 권한을 **따로** 적는다. 예전에는 `flag.isPro` 하나를 "Pro
+        // 전환율, 결제까지 간 비율"이라고 적었는데, 그 값은 결제 ∪ 그랜드파더
+        // ∪ 체험 ∪ TestFlight라서 결제가 아니었다. 신규 설치의 99%가 거기에
+        // 걸려 전환율이 사실과 정반대로 보였다.
+        var signals: [MarketingSignal] = []
+        if let paid = ratioAmongReporting("flag.isPaid") {
+            signals.append(MarketingSignal(
+                name: NSLocalizedString("결제 전환율", comment: "Marketing: paid conversion"),
+                value: paid,
+                hint: NSLocalizedString("실제로 돈을 낸 비율이에요. 새 플래그를 보낸 기기만 셉니다.",
+                                        comment: "Marketing hint: paid")))
+        }
+        signals.append(MarketingSignal(
+            name: NSLocalizedString("기능 열린 비율", comment: "Marketing: access share"),
+            value: ratio { ($0["flag.isPro"] ?? 0) > 0 },
+            hint: NSLocalizedString("결제·그랜드파더·체험을 모두 포함해 Pro 기능이 열려 있는 비율이에요. 결제율이 아닙니다.",
+                                    comment: "Marketing hint: access")))
+        return signals + [
             MarketingSignal(name: NSLocalizedString("카테고리 사용", comment: "Marketing: category adoption"),
                             value: ratio { ($0["categories"] ?? 0) > 0 },
                             hint: NSLocalizedString("정리 기능을 실제로 쓰는 비율이에요.", comment: "Marketing hint: category")),

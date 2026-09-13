@@ -3539,11 +3539,23 @@
     "comment": "Usage stats section: paywall funnel",
     "h": "84ca48e3d2"
   },
+  "결제 전환율": {
+    "ko": "결제 전환율",
+    "en": "Paid conversion",
+    "comment": "Marketing: paid conversion",
+    "h": "3cea88f393"
+  },
   "결제 취소": {
     "ko": "결제 취소",
     "en": "Purchase cancelled",
     "comment": "Dropoff: purchase cancelled",
     "h": "351f755ad4"
+  },
+  "결제·그랜드파더·체험을 모두 포함해 Pro 기능이 열려 있는 비율이에요. 결제율이 아닙니다.": {
+    "ko": "결제·그랜드파더·체험을 모두 포함해 Pro 기능이 열려 있는 비율이에요. 결제율이 아닙니다.",
+    "en": "The share with Pro features unlocked, including purchases, grandfathered users and trials. This is not the purchase rate.",
+    "comment": "Marketing hint: access",
+    "h": "6bc60c3322"
   },
   "결제가 실패함": {
     "ko": "결제가 실패함",
@@ -3562,6 +3574,12 @@
     "en": "Cancelled the purchase",
     "comment": "Event label: purchase cancelled",
     "h": "6637e4fbd2"
+  },
+  "결제한 사용자": {
+    "ko": "결제한 사용자",
+    "en": "Paying users",
+    "comment": "Usage metric: paid users",
+    "h": "706daddb3a"
   },
   "계속": {
     "ko": "계속",
@@ -3928,6 +3946,18 @@
     "en": "Feature",
     "comment": "Feature",
     "h": "95a5536727"
+  },
+  "기능 열린 비율": {
+    "ko": "기능 열린 비율",
+    "en": "Share with features unlocked",
+    "comment": "Marketing: access share",
+    "h": "b886b4aa01"
+  },
+  "기능 열림 (결제 아님)": {
+    "ko": "기능 열림 (결제 아님)",
+    "en": "Features unlocked (not a purchase)",
+    "comment": "Usage metric: access granted",
+    "h": "f294d6d3e0"
   },
   "기본": {
     "ko": "기본",
@@ -4718,8 +4748,8 @@
   "단축어": {
     "ko": "단축어",
     "en": "Snippet",
-    "comment": "Copy value control: memo parameter\nCopy value intent: memo parameter",
-    "h": "8c10487a02"
+    "comment": "Copy value control: memo parameter\nCopy value intent: memo parameter\nDefault snippet title\nSettings section: shortcuts\nShare destination: save as a shortcut right away\nSnippet (saved key-value item) display name",
+    "h": "e5f8dadd0c"
   },
   "단축어 %1$d개 추가, %2$d개 갱신 (총 %3$d개).\n콤보 %4$d개, 이미지 %5$d개, 카테고리 %6$d개를 가져왔습니다.": {
     "ko": "단축어 %1$d개 추가, %2$d개 갱신 (총 %3$d개).\n콤보 %4$d개, 이미지 %5$d개, 카테고리 %6$d개를 가져왔습니다.",
@@ -6022,6 +6052,12 @@
     "en": "The free tier goes from 5 snippets to 10",
     "comment": "Changelog 4.0.6 item 1",
     "h": "5040cc0392"
+  },
+  "무상 제공": {
+    "ko": "무상 제공",
+    "en": "Comped",
+    "comment": "Usage metric: comped users",
+    "h": "a396969bc2"
   },
   "무시": {
     "ko": "무시",
@@ -8332,6 +8368,12 @@
     "en": "Chase account no. holder",
     "comment": "Key label truncation preview sample",
     "h": "e7ab8f9e79"
+  },
+  "실제로 돈을 낸 비율이에요. 새 플래그를 보낸 기기만 셉니다.": {
+    "ko": "실제로 돈을 낸 비율이에요. 새 플래그를 보낸 기기만 셉니다.",
+    "en": "The share who actually paid. Counts only devices that reported the new flags.",
+    "comment": "Marketing hint: paid",
+    "h": "f06e94ca0a"
   },
   "실제로 쓰는 영어 템플릿을 골라 시작하세요": {
     "ko": "실제로 쓰는 영어 템플릿을 골라 시작하세요",
@@ -11692,6 +11734,12 @@
     "en": "Trial started! All features unlocked",
     "comment": "Trial started",
     "h": "2e41818d2c"
+  },
+  "체험 중": {
+    "ko": "체험 중",
+    "en": "On trial",
+    "comment": "Usage metric: trial users",
+    "h": "e33ff486b9"
   },
   "체험 활성: %d일 남음": {
     "ko": "체험 활성: %d일 남음",
